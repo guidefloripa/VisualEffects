@@ -6,6 +6,7 @@
 
 #include "doomfire.h"
 #include "starfield.h"
+#include "tunnel.h"
 
 typedef QPair<QString,Effect*> FxElement;
 
@@ -16,6 +17,7 @@ public:
 
         effects.push_back(FxElement("Doom Fire", new DoomFire(w, h)));
         effects.push_back(FxElement("Star Field", new StarField(w, h)));
+        effects.push_back(FxElement("Tunnel", new Tunnel(w, h)));
 
         selectFx(0);
     }

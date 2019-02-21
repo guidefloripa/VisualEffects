@@ -30,14 +30,16 @@ SOURCES += \
     effect.cpp \
     starfield.cpp \
     fxwidget.cpp \
-    doomfire.cpp
+    doomfire.cpp \
+    tunnel.cpp
 
 HEADERS += \
         mainwindow.h \
     effect.h \
     starfield.h \
     fxwidget.h \
-    doomfire.h
+    doomfire.h \
+    tunnel.h
 
 FORMS += \
         mainwindow.ui
