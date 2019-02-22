@@ -57,10 +57,10 @@ public:
         }
 
         distance = new int*[w];
-        angle = new int*[w];
+        angle = new unsigned int*[w];
         for (int i=0; i<w; i++) {
             distance[i] = new int[h];
-            angle[i] = new int[h];
+            angle[i] = new unsigned int[h];
         }
 
         init();
@@ -81,7 +81,7 @@ public:
         for (int i=0; i<w; i++) {
             for (int j=0; j<h; j++) {
                 distance[i][j] = int(ratio * textureLength / sqrt((i-w/2.0)*(i-w/2.0) + (j-h/2.0)*(j-h/2.0))) % textureLength;
-                angle[i][j] = int((0.5 * textureLength * atan2(i-w/2.0, j-h/2.0) / 3.1416));
+                angle[i][j] = static_cast<unsigned int>((0.5 * textureLength * atan2(i-w/2.0, j-h/2.0) / 3.1416));
             }
         }
     }
@@ -91,7 +91,7 @@ public:
     int elapsed;
 
     int** distance;
-    int** angle;
+    unsigned int** angle;
     uchar texture[textureLength][textureLength];
 
     QVector<QRgb> palette;
@@ -122,7 +122,7 @@ void Tunnel::update()
 
     for (int j=0; j<h; j++) {
         for (int i=0; i<w; i++) {
-            uchar value = d->texture[(d->distance[i][j] + xShift) % textureLength][(d->angle[i][j] + yShift) % textureLength];
+            uchar value = d->texture[(d->distance[i][j] + xShift) % textureLength][(d->angle[i][j] + static_cast<unsigned int>(yShift)) % textureLength];
             setValue(i, j, value);
         }
     }
