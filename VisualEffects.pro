@@ -31,7 +31,8 @@ SOURCES += \
     starfield.cpp \
     fxwidget.cpp \
     doomfire.cpp \
-    tunnel.cpp
+    tunnel.cpp \
+    recursiontree.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +40,8 @@ HEADERS += \
     starfield.h \
     fxwidget.h \
     doomfire.h \
-    tunnel.h
+    tunnel.h \
+    recursiontree.h
 
 FORMS += \
         mainwindow.ui
