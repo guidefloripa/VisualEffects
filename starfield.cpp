@@ -73,7 +73,7 @@ void StarField::update()
     }
 }
 
-const QVector<QRgb>& StarField::palette()
+const QVector<QRgb>& StarField::palette() const
 {
     return d->palette;
 }

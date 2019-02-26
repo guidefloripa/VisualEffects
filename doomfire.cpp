@@ -101,7 +101,7 @@ void DoomFire::update()
     }
 }
 
-const QVector<QRgb>& DoomFire::palette()
+const QVector<QRgb>& DoomFire::palette() const
 {
     return d->palette;
 }

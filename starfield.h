@@ -12,7 +12,7 @@ public:
     void create();
     void destroy();
     void update();
-    const QVector<QRgb>& palette();
+    const QVector<QRgb>& palette() const;
 
 private:
     class Priv;

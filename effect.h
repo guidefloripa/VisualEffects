@@ -4,6 +4,7 @@
 #include <qglobal.h>
 #include <QVector>
 #include <QRgb>
+#include <QPainter>
 
 class Effect
 {
@@ -11,20 +12,20 @@ public:
     Effect(int w, int h);
     virtual ~Effect();
 
-    const uchar* getAlignedVector();
     int width();
     int height();
 
-    uchar getValue(int i, int j);
+    void reset();
+
+    uchar getValue(int i, int j) const;
     void setValue(int i, int j, uchar value);
 
     virtual void create() = 0;
     virtual void destroy() = 0;
     virtual void update() = 0;
+    virtual const QVector<QRgb>& palette() const = 0;
 
-    virtual const QVector<QRgb>& palette() = 0;
-
-    void reset();
+    virtual bool paint(QPainter *painter) const;
 
 protected:
     int w;
@@ -36,7 +37,7 @@ private:
     int aligned_w;
     int vector_len;
 
-    int getVectorIdx(int i, int j);
+    int getVectorIdx(int i, int j) const;
 };
 
 

@@ -1,7 +1,6 @@
 #include "fxwidget.h"
 
 #include <QTimer>
-#include <QImage>
 #include <QPainter>
 
 #include "doomfire.h"
@@ -84,11 +83,8 @@ void FxWidget::paintEvent(QPaintEvent *event)
 {
     QWidget::paintEvent(event);
 
-    QImage img(d->currentFx->getAlignedVector(), d->w, d->h, QImage::Format_Indexed8);
-    img.setColorTable(d->currentFx->palette());
-
     QPainter p(this);
-    p.drawImage(0, 0, img);
+    d->currentFx->paint(&p);
 }
 
 void FxWidget::onTimerUpdate()

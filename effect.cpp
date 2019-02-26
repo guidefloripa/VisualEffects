@@ -20,11 +20,6 @@ Effect::~Effect()
     delete bufferValue;
 }
 
-const uchar* Effect::getAlignedVector()
-{
-    return bufferValue;
-}
-
 int Effect::width()
 {
     return w;
@@ -35,24 +30,40 @@ int Effect::height()
     return h;
 }
 
-int Effect::getVectorIdx(int i, int j) {
+void Effect::reset()
+{
+    size_t len = static_cast<size_t>(vector_len)*sizeof(uchar);
+    memset(bufferValue, 0, len);
+}
+
+int Effect::getVectorIdx(int i, int j) const
+{
     return i + aligned_w * j;
 }
 
-uchar Effect::getValue(int i, int j) {
+uchar Effect::getValue(int i, int j) const
+{
     if (i >= 0 && i < w && j >= 0 && j < h)
         return bufferValue[getVectorIdx(i, j)];
 
     return static_cast<uchar>(-1);
 }
 
-void Effect::setValue(int i, int j, uchar value) {
+void Effect::setValue(int i, int j, uchar value)
+{
     if (i >= 0 && i < w && j >= 0 && j < h)
         bufferValue[getVectorIdx(i, j)] = value;
 }
 
-void Effect::reset()
+bool Effect::paint(QPainter *painter) const
 {
-    size_t len = static_cast<size_t>(vector_len)*sizeof(uchar);
-    memset(bufferValue, 0, len);
+    if (!painter)
+        return false;
+
+    QImage img(bufferValue, w, h, QImage::Format_Indexed8);
+    img.setColorTable(palette());
+
+    painter->drawImage(0, 0, img);
+
+    return true;
 }

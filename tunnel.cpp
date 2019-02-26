@@ -130,7 +130,7 @@ void Tunnel::update()
     d->elapsed++;
 }
 
-const QVector<QRgb>& Tunnel::palette()
+const QVector<QRgb>& Tunnel::palette() const
 {
     return d->palette;
 }
