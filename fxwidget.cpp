@@ -7,6 +7,7 @@
 #include "starfield.h"
 #include "tunnel.h"
 #include "recursiontree.h"
+#include "sierpinski.h"
 
 typedef QPair<QString,Effect*> FxElement;
 
@@ -19,6 +20,7 @@ public:
         effects.push_back(FxElement("Star Field", new StarField(w, h)));
         effects.push_back(FxElement("Tunnel", new Tunnel(w, h)));
         effects.push_back(FxElement("Recursion Tree", new RecursionTree(w, h)));
+        effects.push_back(FxElement("Sierpinski", new Sierpinski(w, h)));
 
         selectFx(0);
     }

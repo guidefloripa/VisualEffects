@@ -32,7 +32,8 @@ SOURCES += \
     fxwidget.cpp \
     doomfire.cpp \
     tunnel.cpp \
-    recursiontree.cpp
+    recursiontree.cpp \
+    sierpinski.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     fxwidget.h \
     doomfire.h \
     tunnel.h \
-    recursiontree.h
+    recursiontree.h \
+    sierpinski.h
 
 FORMS += \
         mainwindow.ui
