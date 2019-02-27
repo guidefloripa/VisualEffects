@@ -3,13 +3,17 @@
 #include <math.h>
 #include <QColor>
 
+// code: https://lodev.org/cgtutor/recursiontrees.html
+
 #define MAX_STEM 4
 
 typedef enum {
     K_DEFAULT,
+    K_DEFAULT_3,
     K_SIERPINSKI_TRIANGLE,
     K_SQUARE,
-    K_90
+    K_SQUARE_45,
+    K_RAND_3
 } TreeKind;
 
 struct treeParams {
@@ -24,23 +28,37 @@ struct treeParams {
 class RecursionTree::Priv
 {
 public:
-    explicit Priv (int _w, int _h) : w(_w), h(_h), curMaxRecursions(0) {
+    explicit Priv (int _w, int _h) : w(_w), h(_h), curMaxRecursions(0), drawLeaves(true) {
         palette.push_back(QColor(232, 232, 232).rgb());
         palette.push_back(QColor(128, 96, 64).rgb());
+        palette.push_back(QColor(128, 255, 128).rgb());
 
-        init(K_DEFAULT);
+        init(K_DEFAULT_3);
     }
 
     void init(TreeKind tk) {
+
+        params.angle = 0.2 * M_PI;
+
         switch (tk) {
         case K_DEFAULT:
+            params.enable[0] = params.enable[1] = true;
+            params.enable[2] = params.enable[3] = false;
+            params.a[0] = 1; params.a[1] = -1;
+            params.c[0] = params.c[1] = 0;
+            params.size = h/2.3;
+            params.shrink = 1.8;
+            params.maxRecursions = 12;
+            break;
+
+        case K_DEFAULT_3:
             params.enable[0] = params.enable[1] = params.enable[2] = true;
             params.enable[3] = false;
             params.a[0] = 1; params.a[1] = -1; params.a[2] = 0;
             params.c[0] = params.c[1] = 0; params.c[2] = 0.2;
             params.size = h/3;
             params.shrink = 1.5;
-            params.maxRecursions = 6;
+            params.maxRecursions = 9;
             break;
 
         case K_SIERPINSKI_TRIANGLE:
@@ -50,7 +68,8 @@ public:
             params.c[0] = 0; params.c[1] = 2*M_PI/3; params.c[2] = -2*M_PI/3;
             params.size = h/2;
             params.shrink = 2;
-            params.maxRecursions = 8;
+            params.angle = 0.25 * M_PI;
+            params.maxRecursions = 9;
             break;
 
         case K_SQUARE:
@@ -59,21 +78,32 @@ public:
             params.c[0] = 0; params.c[1] = M_PI/2; params.c[2] = M_PI; params.c[3] = -M_PI/2;
             params.size = h/2;
             params.shrink = 2;
-            params.maxRecursions = 8;
+            params.angle = 0.25 * M_PI;
+            params.maxRecursions = 9;
             break;
 
-        case K_90:
+        case K_SQUARE_45:
             params.enable[0] = params.enable[1] = params.enable[2] = true;
             params.enable[3] = false;
             params.a[0] = 0; params.a[1] = 0; params.a[2] = 0;
             params.c[0] = 0; params.c[1] = M_PI/2; params.c[2] = -M_PI/2;
             params.size = h/2;
             params.shrink = 2;
-            params.maxRecursions = 8;
+            params.angle = 0.25 * M_PI;
+            params.maxRecursions = 9;
+            break;
+
+        case K_RAND_3:
+            params.enable[0] = params.enable[1] = params.enable[2] = true;
+            params.enable[3] = false;
+            params.a[0] = 0; params.a[1] = 0; params.a[2] = 0;
+            params.c[0] = 0.5; params.c[1] = 0.1; params.c[2] = -0.7;
+            params.size = h/3;
+            params.shrink = 1.5;
+            params.maxRecursions = 9;
             break;
         }
 
-        params.angle = 0.25 * M_PI;
     }
 
     void recursion(QPainter *p, double posX, double posY, double dirX, double dirY, double size, int n)
@@ -83,6 +113,12 @@ public:
         posY2 = posY + size * dirY;
 
         p->drawLine(int(posX), int(posY), int(posX2), int(posY2));
+
+        if (drawLeaves && (n == (params.maxRecursions -1))) {
+            p->setPen(palette[2]);
+            p->drawEllipse(int(posX2), int(posY2), 10, 10);
+            p->setPen(palette[1]);
+        }
 
         if (n >= curMaxRecursions)
             return;
@@ -103,6 +139,7 @@ public:
     struct treeParams params;
     int w, h;
     int curMaxRecursions;
+    bool drawLeaves;
 };
 
 RecursionTree::RecursionTree(int w, int h) : Effect (w, h)
