@@ -33,7 +33,8 @@ SOURCES += \
     doomfire.cpp \
     tunnel.cpp \
     recursiontree.cpp \
-    sierpinski.cpp
+    sierpinski.cpp \
+    fractal.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +44,8 @@ HEADERS += \
     doomfire.h \
     tunnel.h \
     recursiontree.h \
-    sierpinski.h
+    sierpinski.h \
+    fractal.h
 
 FORMS += \
         mainwindow.ui

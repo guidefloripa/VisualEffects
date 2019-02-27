@@ -8,6 +8,7 @@
 #include "tunnel.h"
 #include "recursiontree.h"
 #include "sierpinski.h"
+#include "fractal.h"
 
 typedef QPair<QString,Effect*> FxElement;
 
@@ -21,6 +22,7 @@ public:
         effects.push_back(FxElement("Tunnel", new Tunnel(w, h)));
         effects.push_back(FxElement("Recursion Tree", new RecursionTree(w, h)));
         effects.push_back(FxElement("Sierpinski", new Sierpinski(w, h)));
+        effects.push_back(FxElement("Fractal", new Fractal(w, h)));
 
         selectFx(0);
     }
