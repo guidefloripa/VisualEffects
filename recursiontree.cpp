@@ -68,7 +68,6 @@ public:
             params.c[0] = 0; params.c[1] = 2*M_PI/3; params.c[2] = -2*M_PI/3;
             params.size = h/2;
             params.shrink = 2;
-            params.angle = 0.25 * M_PI;
             params.maxRecursions = 9;
             break;
 
@@ -78,7 +77,6 @@ public:
             params.c[0] = 0; params.c[1] = M_PI/2; params.c[2] = M_PI; params.c[3] = -M_PI/2;
             params.size = h/2;
             params.shrink = 2;
-            params.angle = 0.25 * M_PI;
             params.maxRecursions = 9;
             break;
 
@@ -89,7 +87,6 @@ public:
             params.c[0] = 0; params.c[1] = M_PI/2; params.c[2] = -M_PI/2;
             params.size = h/2;
             params.shrink = 2;
-            params.angle = 0.25 * M_PI;
             params.maxRecursions = 9;
             break;
 
