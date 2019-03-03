@@ -2,6 +2,7 @@
 
 #include <QTimer>
 #include <QPainter>
+#include <QKeyEvent>
 
 #include "doomfire.h"
 #include "starfield.h"
@@ -51,6 +52,8 @@ public:
 FxWidget::FxWidget(QWidget *parent) : QWidget(parent)
 {
     setMinimumSize(400, 320);
+    setFocusPolicy(Qt::StrongFocus);
+
     d = new Priv(width(), height());
     connect(&d->timer, &QTimer::timeout, this, &FxWidget::onTimerUpdate);
     d->timer.start(d->updateInverval);
@@ -97,6 +100,21 @@ void FxWidget::paintEvent(QPaintEvent *event)
 
     QPainter p(this);
     d->currentFx->paint(&p);
+}
+
+#include <QDebug>
+void FxWidget::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Plus: d->currentFx->keyPressed(KEY_PLUS); break;
+    case Qt::Key_Minus: d->currentFx->keyPressed(KEY_MINUS); break;
+    case Qt::Key_Left: d->currentFx->keyPressed(KEY_LEFT); break;
+    case Qt::Key_Right: d->currentFx->keyPressed(KEY_RIGHT); break;
+    case Qt::Key_Up: d->currentFx->keyPressed(KEY_UP); break;
+    case Qt::Key_Down: d->currentFx->keyPressed(KEY_DOWN); break;
+    }
+
+    QWidget::keyPressEvent(event);
 }
 
 void FxWidget::onTimerUpdate()

@@ -6,6 +6,15 @@
 #include <QRgb>
 #include <QPainter>
 
+typedef enum {
+    KEY_MINUS,
+    KEY_PLUS,
+    KEY_LEFT,
+    KEY_RIGHT,
+    KEY_UP,
+    KEY_DOWN
+} FxKey;
+
 class Effect
 {
 public:
@@ -30,6 +39,8 @@ public:
 
     virtual QPair<int, QVector<QString>> fxKindList() const;
     virtual void setFxKind(int kind);
+
+    virtual void keyPressed(FxKey key);
 
 protected:
     int w;
