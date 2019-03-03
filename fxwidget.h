@@ -3,16 +3,17 @@
 
 #include <QWidget>
 #include <QString>
-#include <QList>
+#include <QVector>
 
 class FxWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FxWidget(int w, int h, QWidget *parent = nullptr);
+    FxWidget(QWidget *parent = nullptr);
     ~FxWidget();
 
-    QList<QString> fxList();
+    QVector<QString> fxList();
+    QPair<int, QVector<QString>> fxKindList();
     int updateInterval();
 
     bool isRunning();
@@ -27,16 +28,18 @@ private:
 
 signals:
     void statusUpdated();
+    void paramsUpdated();
 
 public slots:
     void onTimerUpdate();
 
     void onEffectSelected(int fx);
-
     void onPlayPausePressed();
 
     void onIncreaseIntervalPressed();
     void onDecreaseIntervalPressed();
+
+    void onFxKindSelected(int kind);
 };
 
 #endif // FXWIDGET_H

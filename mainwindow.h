@@ -6,8 +6,6 @@
 #include <QComboBox>
 #include <QLabel>
 
-#include "fxwidget.h"
-
 namespace Ui {
 class MainWindow;
 }
@@ -23,8 +21,6 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    FxWidget *fxwidget;
-
     QComboBox *effectsBox;
     QPushButton* playPauseButton;
 
@@ -35,6 +31,7 @@ private:
 
 public slots:
     void onStatusUpdated();
+    void onParamsUpdated();
 };
 
 #endif // MAINWINDOW_H

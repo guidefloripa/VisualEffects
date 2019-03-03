@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "fxwidget.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -9,11 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle("Visual Effects Qt");
 
-    fxwidget = new FxWidget(centralWidget()->width(), centralWidget()->height());
-    setCentralWidget(fxwidget);
-
     effectsBox = new QComboBox(this);
-    foreach(QString fx, fxwidget->fxList())
+    foreach(QString fx, ui->fxwidget->fxList())
         effectsBox->addItem(fx);
 
     playPauseButton = new QPushButton(this);
@@ -26,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     updateIntervalLabel = new QLabel(this);
     updateIntervalLabel->setMinimumWidth(20);
     updateIntervalLabel->setAlignment(Qt::AlignCenter);
+    //updateIntervalLabel->setStyleSheet("QLabel{color: white;}");
 
     ui->mainToolBar->addWidget(effectsBox);
 
@@ -37,25 +37,46 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addWidget(updateIntervalLabel);
     ui->mainToolBar->addWidget(increaseRefreshButton);
 
-    connect(effectsBox, SIGNAL(currentIndexChanged(int)), fxwidget, SLOT(onEffectSelected(int)));
-    connect(playPauseButton, &QPushButton::pressed, fxwidget, &FxWidget::onPlayPausePressed);
+    connect(effectsBox, SIGNAL(currentIndexChanged(int)), ui->fxwidget, SLOT(onEffectSelected(int)));
+    connect(playPauseButton, &QPushButton::pressed, ui->fxwidget, &FxWidget::onPlayPausePressed);
 
-    connect(decreaseRefreshButton, &QPushButton::released, fxwidget, &FxWidget::onDecreaseIntervalPressed);
-    connect(increaseRefreshButton, &QPushButton::released, fxwidget, &FxWidget::onIncreaseIntervalPressed);
+    connect(decreaseRefreshButton, &QPushButton::released, ui->fxwidget, &FxWidget::onDecreaseIntervalPressed);
+    connect(increaseRefreshButton, &QPushButton::released, ui->fxwidget, &FxWidget::onIncreaseIntervalPressed);
 
-    connect(fxwidget, &FxWidget::statusUpdated, this, &MainWindow::onStatusUpdated);
+    connect(ui->fxKindBox, SIGNAL(currentIndexChanged(int)), ui->fxwidget, SLOT(onFxKindSelected(int)));
+
+    connect(ui->fxwidget, &FxWidget::statusUpdated, this, &MainWindow::onStatusUpdated);
+    connect(ui->fxwidget, &FxWidget::paramsUpdated, this, &MainWindow::onParamsUpdated);
 
     onStatusUpdated();
 }
 
 MainWindow::~MainWindow()
 {
-    delete fxwidget;
     delete ui;
 }
 
 void MainWindow::onStatusUpdated()
 {
-    playPauseButton->setText(fxwidget->isRunning() ? "Pause" : "Play");
-    updateIntervalLabel->setText(QString("%1").arg(fxwidget->updateInterval()));
+    playPauseButton->setText(ui->fxwidget->isRunning() ? "Pause" : "Play");
+    updateIntervalLabel->setText(QString("%1").arg(ui->fxwidget->updateInterval()));
+
+    onParamsUpdated();
+}
+
+void MainWindow::onParamsUpdated()
+{
+    QPair<int, QVector<QString>> paramsString = ui->fxwidget->fxKindList();
+
+    ui->fxKindBox->clear();
+    if (!paramsString.second.isEmpty()) {
+        foreach(QString param, paramsString.second)
+            ui->fxKindBox->addItem(param);
+
+        ui->fxKindBox->setCurrentIndex(paramsString.first);
+        ui->fxKindBox->setEnabled(true);
+    }
+    else {
+        ui->fxKindBox->setEnabled(false);
+    }
 }

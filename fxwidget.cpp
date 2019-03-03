@@ -48,9 +48,10 @@ public:
     bool isCreated;
 };
 
-FxWidget::FxWidget(int w, int h, QWidget *parent) : QWidget(parent)
+FxWidget::FxWidget(QWidget *parent) : QWidget(parent)
 {
-    d = new Priv(w, h);
+    setMinimumSize(400, 320);
+    d = new Priv(width(), height());
     connect(&d->timer, &QTimer::timeout, this, &FxWidget::onTimerUpdate);
     d->timer.start(d->updateInverval);
 }
@@ -60,14 +61,19 @@ FxWidget::~FxWidget()
     delete d;
 }
 
-QList<QString> FxWidget::fxList()
+QVector<QString> FxWidget::fxList()
 {
-    QList<QString> list;
+    QVector<QString> v;
 
     foreach (FxElement fx, d->effects)
-        list.append(fx.first);
+        v.append(fx.first);
 
-    return list;
+    return v;
+}
+
+QPair<int, QVector<QString>> FxWidget::fxKindList()
+{
+    return d->currentFx->fxKindList();
 }
 
 int FxWidget::updateInterval()
@@ -102,7 +108,11 @@ void FxWidget::onTimerUpdate()
 void FxWidget::onEffectSelected(int fx)
 {
     d->selectFx(fx);
+    d->updateInverval = d->currentFx->defaultRefreshRate();
+    d->timer.setInterval(d->updateInverval);
     update();
+
+    emit statusUpdated();
 }
 
 void FxWidget::onPlayPausePressed()
@@ -118,8 +128,12 @@ void FxWidget::onPlayPausePressed()
 
 void FxWidget::onIncreaseIntervalPressed()
 {
-    if (d->updateInverval < 100) {
-        d->updateInverval += 5;
+    if (d->updateInverval < 500) {
+        if (d->updateInverval >= 100)
+            d->updateInverval += 20;
+        else
+            d->updateInverval += 5;
+
         d->timer.setInterval(d->updateInverval);
         emit statusUpdated();
     }
@@ -127,9 +141,18 @@ void FxWidget::onIncreaseIntervalPressed()
 
 void FxWidget::onDecreaseIntervalPressed()
 {
+
     if (d->updateInverval > 5) {
-        d->updateInverval -= 5;
+        if (d->updateInverval <= 100)
+            d->updateInverval -= 5;
+        else
+            d->updateInverval -= 20;
         d->timer.setInterval(d->updateInverval);
         emit statusUpdated();
     }
+}
+
+void FxWidget::onFxKindSelected(int kind)
+{
+    d->currentFx->setFxKind(kind);
 }
