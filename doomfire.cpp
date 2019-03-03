@@ -2,10 +2,22 @@
 
 #include <QColor>
 
+typedef enum {
+    K_WIND_L3 = 0,
+    K_WIND_L2 = 1,
+    K_WIND_L1 = 2,
+    K_NO_WIND = 3,
+    K_WIND_R1 = 4,
+    K_WIND_R2 = 5,
+    K_WIND_R3 = 6,
+} WindKind;
+
 class DoomFire::Priv
 {
 public:
-    Priv () : windSpeed(2) {
+    Priv () {
+        initKind(K_WIND_R1);
+
         palette.push_back(QColor(7, 7, 7).rgb());
         palette.push_back(QColor(31, 7, 7).rgb());
         palette.push_back(QColor(47, 15, 7).rgb());
@@ -45,7 +57,22 @@ public:
         palette.push_back(QColor(255, 255, 255).rgb());
     }
 
+    void initKind(WindKind k) {
+        kind = k;
+
+        switch (k) {
+        case K_WIND_L3: windSpeed = -3; break;
+        case K_WIND_L2: windSpeed = -2; break;
+        case K_WIND_L1: windSpeed = -1; break;
+        case K_NO_WIND: windSpeed = 0; break;
+        case K_WIND_R1: windSpeed = 1; break;
+        case K_WIND_R2: windSpeed = 2; break;
+        case K_WIND_R3: windSpeed = 3; break;
+        }
+    }
+
     QVector<QRgb> palette;
+    WindKind kind;
     int windSpeed;
 };
 
@@ -109,4 +136,34 @@ int DoomFire::defaultRefreshRate()
 const QVector<QRgb>& DoomFire::palette() const
 {
     return d->palette;
+}
+
+QPair<int, QVector<QString>> DoomFire::fxKindList() const
+{
+    QVector<QString> v;
+
+    v.append("Wind: -3");
+    v.append("Wind: -2");
+    v.append("Wind: -1");
+    v.append("Wind: No Wind");
+    v.append("Wind: 1");
+    v.append("Wind: 2");
+    v.append("Wind: 3");
+
+    return QPair<int, QVector<QString>>(d->kind, v);
+}
+
+void DoomFire::setFxKind(int kind)
+{
+    switch (kind) {
+        case K_WIND_L3:
+        case K_WIND_L2:
+        case K_WIND_L1:
+        case K_NO_WIND:
+        case K_WIND_R1:
+        case K_WIND_R2:
+        case K_WIND_R3:
+            d->initKind(WindKind(kind));
+            break;
+    }
 }

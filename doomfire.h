@@ -15,6 +15,9 @@ public:
     int defaultRefreshRate();
     const QVector<QRgb>& palette() const;
 
+    virtual QPair<int, QVector<QString>> fxKindList() const;
+    virtual void setFxKind(int kind);
+
 private:
     class Priv;
     Priv *d;
