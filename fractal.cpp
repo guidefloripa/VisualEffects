@@ -8,8 +8,8 @@
 // code: https://lodev.org/cgtutor/juliamandelbrot.html
 
 typedef enum {
-    K_JULIA_SET,
-    K_MANDELBROT
+    K_JULIA_SET = 0,
+    K_MANDELBROT = 1
 } FractalKind;
 
 class Fractal::Priv
@@ -97,7 +97,7 @@ public:
 
     QVector<QRgb> palette;
     int w, h;
-    int curMaxRecursions;
+    //int curMaxRecursions;
     FractalKind kind;
 };
 
@@ -121,7 +121,12 @@ void Fractal::destroy()
 
 void Fractal::update()
 {
-    d->curMaxRecursions = (d->curMaxRecursions + 1) % 9;
+    //d->curMaxRecursions = (d->curMaxRecursions + 1) % 9;
+}
+
+int Fractal::defaultRefreshRate()
+{
+    return 500;
 }
 
 const QVector<QRgb>& Fractal::palette() const
@@ -145,4 +150,24 @@ bool Fractal::paint(QPainter *painter) const
     }
 
     return true;
+}
+
+QPair<int, QVector<QString>> Fractal::fxKindList() const
+{
+    QVector<QString> v;
+
+    v.append("Julia Set");
+    v.append("Mandelbrot");
+
+    return QPair<int, QVector<QString>>(d->kind, v);
+}
+
+void Fractal::setFxKind(int kind)
+{
+    switch (kind) {
+        case K_JULIA_SET:
+        case K_MANDELBROT:
+            d->kind = FractalKind(kind);
+            break;
+    }
 }

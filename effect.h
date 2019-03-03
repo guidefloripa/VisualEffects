@@ -23,9 +23,13 @@ public:
     virtual void create() = 0;
     virtual void destroy() = 0;
     virtual void update() = 0;
+    virtual int defaultRefreshRate() = 0;
     virtual const QVector<QRgb>& palette() const = 0;
 
     virtual bool paint(QPainter *painter) const;
+
+    virtual QPair<int, QVector<QString>> fxKindList() const;
+    virtual void setFxKind(int kind);
 
 protected:
     int w;

@@ -73,6 +73,11 @@ void StarField::update()
     }
 }
 
+int StarField::defaultRefreshRate()
+{
+    return 30;
+}
+
 const QVector<QRgb>& StarField::palette() const
 {
     return d->palette;

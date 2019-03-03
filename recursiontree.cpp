@@ -8,12 +8,12 @@
 #define MAX_STEM 4
 
 typedef enum {
-    K_DEFAULT,
-    K_DEFAULT_3,
-    K_SIERPINSKI_TRIANGLE,
-    K_SQUARE,
-    K_SQUARE_45,
-    K_RAND_3
+    K_DEFAULT = 0,
+    K_DEFAULT_3 = 1,
+    K_SIERPINSKI_TRIANGLE = 2,
+    K_SQUARE = 3,
+    K_SQUARE_45 = 4,
+    K_RAND_3 = 5
 } TreeKind;
 
 struct treeParams {
@@ -28,19 +28,18 @@ struct treeParams {
 class RecursionTree::Priv
 {
 public:
-    explicit Priv (int _w, int _h) : w(_w), h(_h), curMaxRecursions(0), drawLeaves(true) {
+    explicit Priv (int _w, int _h) : w(_w), h(_h), curMaxRecursions(0), kind(K_DEFAULT), drawLeaves(true) {
         palette.push_back(QColor(232, 232, 232).rgb());
         palette.push_back(QColor(128, 96, 64).rgb());
         palette.push_back(QColor(128, 255, 128).rgb());
 
-        init(K_DEFAULT_3);
+        init();
     }
 
-    void init(TreeKind tk) {
-
+    void init() {
         params.angle = 0.2 * M_PI;
 
-        switch (tk) {
+        switch (kind) {
         case K_DEFAULT:
             params.enable[0] = params.enable[1] = true;
             params.enable[2] = params.enable[3] = false;
@@ -136,6 +135,7 @@ public:
     struct treeParams params;
     int w, h;
     int curMaxRecursions;
+    TreeKind kind;
     bool drawLeaves;
 };
 
@@ -151,6 +151,8 @@ RecursionTree::~RecursionTree()
 
 void RecursionTree::create()
 {
+    d->curMaxRecursions = 0;
+    d->init();
 }
 
 void RecursionTree::destroy()
@@ -160,6 +162,11 @@ void RecursionTree::destroy()
 void RecursionTree::update()
 {
     d->curMaxRecursions = (d->curMaxRecursions + 1) % d->params.maxRecursions;
+}
+
+int RecursionTree::defaultRefreshRate()
+{
+    return 500;
 }
 
 const QVector<QRgb>& RecursionTree::palette() const
@@ -180,4 +187,33 @@ bool RecursionTree::paint(QPainter *painter) const
         d->recursion(painter, w/2, h-1, 0, -1, d->params.size, 1);
 
     return true;
+}
+
+QPair<int, QVector<QString>> RecursionTree::fxKindList() const
+{
+    QVector<QString> v;
+
+    v.append("Default");
+    v.append("Default 3");
+    v.append("Sierpinski Triangle");
+    v.append("Square");
+    v.append("Square 45");
+    v.append("Rand 3");
+
+    return QPair<int, QVector<QString>>(d->kind, v);
+}
+
+void RecursionTree::setFxKind(int kind)
+{
+    switch (kind) {
+        case K_DEFAULT:
+        case K_DEFAULT_3:
+        case K_SIERPINSKI_TRIANGLE:
+        case K_SQUARE:
+        case K_SQUARE_45:
+        case K_RAND_3:
+            d->kind = TreeKind(kind);
+            create();
+            break;
+    }
 }

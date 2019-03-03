@@ -101,6 +101,11 @@ void DoomFire::update()
     }
 }
 
+int DoomFire::defaultRefreshRate()
+{
+    return 30;
+}
+
 const QVector<QRgb>& DoomFire::palette() const
 {
     return d->palette;

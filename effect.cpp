@@ -67,3 +67,13 @@ bool Effect::paint(QPainter *painter) const
 
     return true;
 }
+
+QPair<int, QVector<QString>> Effect::fxKindList() const
+{
+    return QPair<int, QVector<QString>> ();
+}
+
+void Effect::setFxKind(int kind)
+{
+    Q_UNUSED(kind);
+}

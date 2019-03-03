@@ -6,12 +6,12 @@
 // code: https://lodev.org/cgtutor/sierpinski.html
 
 typedef enum {
-    K_TRIANGLE,
-    K_AND,
-    K_RAND,
-    K_RECT_RECURSION,
-    K_CARPET,
-    K_CARPET_TERNARY
+    K_TRIANGLE = 0,
+    K_AND = 1,
+    K_RAND = 2,
+    K_RECT_RECURSION = 3,
+    K_CARPET = 4,
+    K_CARPET_TERNARY = 5
 } SierpinskiKind;
 
 class Sierpinski::Priv
@@ -210,6 +210,7 @@ Sierpinski::~Sierpinski()
 
 void Sierpinski::create()
 {
+    d->curMaxRecursions = 0;
 }
 
 void Sierpinski::destroy()
@@ -219,6 +220,11 @@ void Sierpinski::destroy()
 void Sierpinski::update()
 {
     d->curMaxRecursions = (d->curMaxRecursions + 1) % 9;
+}
+
+int Sierpinski::defaultRefreshRate()
+{
+    return 500;
 }
 
 const QVector<QRgb>& Sierpinski::palette() const
@@ -298,4 +304,33 @@ bool Sierpinski::paint(QPainter *painter) const
     }
 
     return true;
+}
+
+QPair<int, QVector<QString>> Sierpinski::fxKindList() const
+{
+    QVector<QString> v;
+
+    v.append("Triangle");
+    v.append("And");
+    v.append("Random");
+    v.append("Rect Recursion");
+    v.append("Carpet");
+    v.append("Carpet Ternary");
+
+    return QPair<int, QVector<QString>>(d->kind, v);
+}
+
+void Sierpinski::setFxKind(int kind)
+{
+    switch (kind) {
+        case K_TRIANGLE:
+        case K_AND:
+        case K_RAND:
+        case K_RECT_RECURSION:
+        case K_CARPET:
+        case K_CARPET_TERNARY:
+            d->kind = SierpinskiKind(kind);
+            create();
+            break;
+    }
 }

@@ -130,6 +130,11 @@ void Tunnel::update()
     d->elapsed++;
 }
 
+int Tunnel::defaultRefreshRate()
+{
+    return 30;
+}
+
 const QVector<QRgb>& Tunnel::palette() const
 {
     return d->palette;

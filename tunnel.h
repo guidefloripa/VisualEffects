@@ -12,6 +12,7 @@ public:
     void create();
     void destroy();
     void update();
+    int defaultRefreshRate();
     const QVector<QRgb>& palette() const;
 
 private:
