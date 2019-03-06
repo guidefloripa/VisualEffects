@@ -59,6 +59,8 @@ MainWindow::~MainWindow()
 void MainWindow::onStatusUpdated()
 {
     playPauseButton->setText(ui->fxwidget->isRunning() ? "Pause" : "Play");
+    playPauseButton->setEnabled((ui->fxwidget->updateInterval() > 0) ? true : false);
+
     updateIntervalLabel->setText(QString("%1").arg(ui->fxwidget->updateInterval()));
 
     onParamsUpdated();

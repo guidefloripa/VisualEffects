@@ -16,7 +16,7 @@ typedef QPair<QString,Effect*> FxElement;
 class FxWidget::Priv
 {
 public:
-    Priv(int _w, int _h) : currentFx(nullptr), w(_w), h(_h), updateInverval(30), isRunning(true), isCreated(true) {
+    Priv(int _w, int _h) : currentFx(nullptr), w(_w), h(_h), isRunning(true), isCreated(true) {
 
         effects.push_back(FxElement("Doom Fire", new DoomFire(w, h)));
         effects.push_back(FxElement("Star Field", new StarField(w, h)));
@@ -35,6 +35,8 @@ public:
 
     void selectFx(int i) {
         currentFx = effects[i].second;
+        updateInterval = currentFx->defaultRefreshRate();
+        timer.setInterval(updateInterval);
     }
 
     QVector<FxElement> effects;
@@ -44,7 +46,7 @@ public:
     int w;
     int h;
 
-    int updateInverval;
+    int updateInterval;
     bool isRunning;
     bool isCreated;
 };
@@ -56,7 +58,8 @@ FxWidget::FxWidget(QWidget *parent) : QWidget(parent)
 
     d = new Priv(width(), height());
     connect(&d->timer, &QTimer::timeout, this, &FxWidget::onTimerUpdate);
-    d->timer.start(d->updateInverval);
+    if (d->updateInterval > 0)
+        d->timer.start();
 }
 
 FxWidget::~FxWidget()
@@ -81,7 +84,7 @@ QPair<int, QVector<QString>> FxWidget::fxKindList()
 
 int FxWidget::updateInterval()
 {
-    return d->updateInverval;
+    return d->updateInterval;
 }
 
 bool FxWidget::isRunning()
@@ -94,27 +97,33 @@ bool FxWidget::isCreated()
     return d->isCreated;
 }
 
+//#include <QDebug>
 void FxWidget::paintEvent(QPaintEvent *event)
 {
     QWidget::paintEvent(event);
+
+    //qDebug() << "Paint event" << d->updateInterval;
 
     QPainter p(this);
     d->currentFx->paint(&p);
 }
 
-#include <QDebug>
 void FxWidget::keyPressEvent(QKeyEvent *event)
 {
+    bool needUpdate = false;
+
     switch (event->key()) {
-    case Qt::Key_Plus: d->currentFx->keyPressed(KEY_PLUS); break;
-    case Qt::Key_Minus: d->currentFx->keyPressed(KEY_MINUS); break;
-    case Qt::Key_Left: d->currentFx->keyPressed(KEY_LEFT); break;
-    case Qt::Key_Right: d->currentFx->keyPressed(KEY_RIGHT); break;
-    case Qt::Key_Up: d->currentFx->keyPressed(KEY_UP); break;
-    case Qt::Key_Down: d->currentFx->keyPressed(KEY_DOWN); break;
+    case Qt::Key_Plus: needUpdate = d->currentFx->keyPressed(KEY_PLUS); break;
+    case Qt::Key_Minus: needUpdate = d->currentFx->keyPressed(KEY_MINUS); break;
+    case Qt::Key_Left: needUpdate = d->currentFx->keyPressed(KEY_LEFT); break;
+    case Qt::Key_Right: needUpdate = d->currentFx->keyPressed(KEY_RIGHT); break;
+    case Qt::Key_Up: needUpdate = d->currentFx->keyPressed(KEY_UP); break;
+    case Qt::Key_Down: needUpdate = d->currentFx->keyPressed(KEY_DOWN); break;
     }
 
     QWidget::keyPressEvent(event);
+    if (needUpdate)
+        update();
 }
 
 void FxWidget::onTimerUpdate()
@@ -126,10 +135,12 @@ void FxWidget::onTimerUpdate()
 void FxWidget::onEffectSelected(int fx)
 {
     d->selectFx(fx);
-    d->updateInverval = d->currentFx->defaultRefreshRate();
-    d->timer.setInterval(d->updateInverval);
-    update();
 
+    d->timer.stop();
+    if (d->isRunning && d->updateInterval > 0)
+        d->timer.start();
+
+    update();
     emit statusUpdated();
 }
 
@@ -137,8 +148,8 @@ void FxWidget::onPlayPausePressed()
 {
     if (d->isRunning)
         d->timer.stop();
-    else
-        d->timer.start(d->updateInverval);
+    else if (d->updateInterval > 0)
+        d->timer.start();
 
     d->isRunning = !d->isRunning;
     emit statusUpdated();
@@ -146,26 +157,25 @@ void FxWidget::onPlayPausePressed()
 
 void FxWidget::onIncreaseIntervalPressed()
 {
-    if (d->updateInverval < 500) {
-        if (d->updateInverval >= 100)
-            d->updateInverval += 20;
+    if (d->updateInterval < 500) {
+        if (d->updateInterval >= 100)
+            d->updateInterval += 20;
         else
-            d->updateInverval += 5;
+            d->updateInterval += 5;
 
-        d->timer.setInterval(d->updateInverval);
+        d->timer.setInterval(d->updateInterval);
         emit statusUpdated();
     }
 }
 
 void FxWidget::onDecreaseIntervalPressed()
 {
-
-    if (d->updateInverval > 5) {
-        if (d->updateInverval <= 100)
-            d->updateInverval -= 5;
+    if (d->updateInterval > 5) {
+        if (d->updateInterval <= 100)
+            d->updateInterval -= 5;
         else
-            d->updateInverval -= 20;
-        d->timer.setInterval(d->updateInverval);
+            d->updateInterval -= 20;
+        d->timer.setInterval(d->updateInterval);
         emit statusUpdated();
     }
 }
