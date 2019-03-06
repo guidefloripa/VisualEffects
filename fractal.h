@@ -20,6 +20,8 @@ public:
     virtual QPair<int, QVector<QString>> fxKindList() const;
     virtual void setFxKind(int kind);
 
+    virtual bool keyPressed(FxKey key);
+
 private:
     class Priv;
     Priv *d;

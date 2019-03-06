@@ -40,7 +40,7 @@ public:
     virtual QPair<int, QVector<QString>> fxKindList() const;
     virtual void setFxKind(int kind);
 
-    virtual void keyPressed(FxKey key);
+    virtual bool keyPressed(FxKey key);
 
 protected:
     int w;

@@ -78,7 +78,8 @@ void Effect::setFxKind(int kind)
     Q_UNUSED(kind);
 }
 
-void Effect::keyPressed(FxKey key)
+bool Effect::keyPressed(FxKey key)
 {
     Q_UNUSED(key);
+    return false;
 }
