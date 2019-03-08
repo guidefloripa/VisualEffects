@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->fxwidget, &FxWidget::paramsUpdated, this, &MainWindow::onParamsUpdated);
 
     onStatusUpdated();
+    onParamsUpdated();
 }
 
 MainWindow::~MainWindow()
@@ -62,8 +63,6 @@ void MainWindow::onStatusUpdated()
     playPauseButton->setEnabled((ui->fxwidget->updateInterval() > 0) ? true : false);
 
     updateIntervalLabel->setText(QString("%1").arg(ui->fxwidget->updateInterval()));
-
-    onParamsUpdated();
 }
 
 void MainWindow::onParamsUpdated()

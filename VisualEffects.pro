@@ -34,7 +34,8 @@ SOURCES += \
     tunnel.cpp \
     recursiontree.cpp \
     sierpinski.cpp \
-    fractal.cpp
+    fractal.cpp \
+    plasma.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +46,8 @@ HEADERS += \
     tunnel.h \
     recursiontree.h \
     sierpinski.h \
-    fractal.h
+    fractal.h \
+    plasma.h
 
 FORMS += \
         mainwindow.ui

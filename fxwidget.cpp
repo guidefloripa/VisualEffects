@@ -10,6 +10,7 @@
 #include "recursiontree.h"
 #include "sierpinski.h"
 #include "fractal.h"
+#include "plasma.h"
 
 typedef QPair<QString,Effect*> FxElement;
 
@@ -24,6 +25,7 @@ public:
         effects.push_back(FxElement("Recursion Tree", new RecursionTree(w, h)));
         effects.push_back(FxElement("Sierpinski", new Sierpinski(w, h)));
         effects.push_back(FxElement("Fractal", new Fractal(w, h)));
+        effects.push_back(FxElement("Plasma", new Plasma(w, h)));
 
         selectFx(0);
     }
@@ -142,6 +144,7 @@ void FxWidget::onEffectSelected(int fx)
 
     update();
     emit statusUpdated();
+    emit paramsUpdated();
 }
 
 void FxWidget::onPlayPausePressed()
