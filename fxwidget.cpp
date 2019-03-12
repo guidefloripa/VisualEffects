@@ -11,6 +11,7 @@
 #include "sierpinski.h"
 #include "fractal.h"
 #include "plasma.h"
+#include "fire.h"
 
 typedef QPair<QString,Effect*> FxElement;
 
@@ -26,6 +27,7 @@ public:
         effects.push_back(FxElement("Sierpinski", new Sierpinski(w, h)));
         effects.push_back(FxElement("Fractal", new Fractal(w, h)));
         effects.push_back(FxElement("Plasma", new Plasma(w, h)));
+        effects.push_back(FxElement("Fire", new Fire(w, h)));
 
         selectFx(0);
     }

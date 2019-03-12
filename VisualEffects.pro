@@ -35,7 +35,8 @@ SOURCES += \
     recursiontree.cpp \
     sierpinski.cpp \
     fractal.cpp \
-    plasma.cpp
+    plasma.cpp \
+    fire.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +48,8 @@ HEADERS += \
     recursiontree.h \
     sierpinski.h \
     fractal.h \
-    plasma.h
+    plasma.h \
+    fire.h
 
 FORMS += \
         mainwindow.ui
