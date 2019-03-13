@@ -4,15 +4,19 @@
 Many visual effects available, such as:
 
 **Doom Fire**
+
 ![Doom GIF](https://raw.githubusercontent.com/guidefloripa/VisualEffects/master/img/doomfire.gif)
 
 **Sierpinski Triangle**
+
 ![Sierpinski GIF](https://raw.githubusercontent.com/guidefloripa/VisualEffects/master/img/sierpinski.gif)
 
 **Tunnel**
+
 ![Tunnel GIF](https://raw.githubusercontent.com/guidefloripa/VisualEffects/master/img/tunnel.gif)
 
 **Plasma**
+
 ![Plasma GIF](https://raw.githubusercontent.com/guidefloripa/VisualEffects/master/img/plasma.gif)
 
 and much more...
